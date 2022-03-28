@@ -140,29 +140,35 @@ export type QueryInstagramUserArgs = {
   userId: Scalars['String'];
 };
 
+export type UserFieldsFragmentFragment = { __typename?: 'InstagramUserProfile', username: string, userId: string };
+
 export type GetUserQueryVariables = Types.Exact<{
   userId: Types.Scalars['String'];
 }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', instagramUser?: { __typename?: 'InstagramUserProfile', email: string, username: string, userId: string, postsCount: number } | null };
+export type GetUserQuery = { __typename?: 'Query', instagramUser?: { __typename?: 'InstagramUserProfile', email: string, postsCount: number, username: string, userId: string } | null };
 
 export type GetAllUsersQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
 export type GetAllUsersQuery = { __typename?: 'Query', instagramUsers: Array<{ __typename?: 'InstagramUserProfile', username: string, userId: string }> };
 
-
+export const UserFieldsFragmentFragmentDoc = gql`
+    fragment UserFieldsFragment on InstagramUserProfile {
+  username
+  userId
+}
+    `;
 export const GetUserDocument = gql`
     query GetUser($userId: String!) {
   instagramUser(userId: $userId) {
     email
-    username
-    userId
     postsCount
+    ...UserFieldsFragment
   }
 }
-    `;
+    ${UserFieldsFragmentFragmentDoc}`;
 
 /**
  * __useGetUserQuery__
@@ -194,11 +200,10 @@ export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVa
 export const GetAllUsersDocument = gql`
     query GetAllUsers {
   instagramUsers {
-    username
-    userId
+    ...UserFieldsFragment
   }
 }
-    `;
+    ${UserFieldsFragmentFragmentDoc}`;
 
 /**
  * __useGetAllUsersQuery__
